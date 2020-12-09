@@ -1,4 +1,6 @@
 import './main.css';
+import Game from './game/game';
+import Bird from './bird/bird';
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
@@ -33,6 +35,8 @@ class AnimationFrame {
     }
 
 }
+const bird = new Bird(20, 50);
+const game = new Game(bird);
 
 
 function draw(){

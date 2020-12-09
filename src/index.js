@@ -1,9 +1,14 @@
 import './main.css';
 import Game from './game/game';
-import Bird from './bird/bird';
+import { birdDirections } from './birdDirectins';
 
 const canvas = document.querySelector("#canvas");
 const ctx = canvas.getContext("2d");
+
+const birdRight = new Image();
+birdRight.src = "../src/images/bird_right.PNG";
+const birdLeft = new Image();
+birdLeft.src = "../src/images/bird_left.PNG";
 
 
 class AnimationFrame {
@@ -35,12 +40,29 @@ class AnimationFrame {
     }
 
 }
-const bird = new Bird(20, 50);
-const game = new Game(bird);
 
+const game = new Game(canvas.width, canvas.height);
+
+canvas.addEventListener("click", () => {
+    game.handleTouchEvent();
+})
 
 function draw(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+    //draw walls
+    ctx.fillRect(0, 0, 30, canvas.height)
+    ctx.fillRect(canvas.width-30, 0, 30, canvas.height)
+    ctx.fillRect(0, 0, canvas.width, 30);
+    ctx.fillRect(0, canvas.height-30, canvas.width, 30);
+
+    //draw bird
+    if(game.birdDirection===birdDirections.right){
+        ctx.drawImage(birdRight, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
+    }else{
+        ctx.drawImage(birdLeft, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
+    }
+    game.moveBird();
 }
 
 const animLoop = new AnimationFrame(60, draw);

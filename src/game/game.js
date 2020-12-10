@@ -1,8 +1,11 @@
 import Bird from '../bird/bird';
+import Spikes from '../spikes/spikes';
 import { birdDirections } from '../birdDirectins';
 
 export default class Game {
     #bird;
+    #leftWallSpikes;
+    #rightWallSpikes;
     #isGameInProgress;
     #isGameOver;
     #boardWidth;
@@ -10,6 +13,8 @@ export default class Game {
 
     constructor(boardWidth, boardHeight){
         this.#bird = new Bird(boardWidth/2-20, boardHeight/2-30);
+        this.#leftWallSpikes = new Spikes('left', boardWidth, boardHeight, 'right', 11);
+        this.#rightWallSpikes = new Spikes('right', boardWidth, boardHeight, 'right', 11);
         this.#isGameInProgress = true;
         this.#isGameOver = false;
         this.#boardWidth = boardWidth;
@@ -24,13 +29,21 @@ export default class Game {
         }
     }
 
-    moveBird(){
+    renderGame(){
         this.#bird.moveBird();
+        this.#leftWallSpikes.moveSpikes();
+        this.#rightWallSpikes.moveSpikes();
         if(this.#bird.positionX<=30){
-            this.#bird.flightDirection = birdDirections.right;   
+            this.#bird.flightDirection = birdDirections.right; 
+            this.#rightWallSpikes.drawSlots(4);
+            this.#rightWallSpikes.showSpikes();
+            this.#leftWallSpikes.hideSpikes();
         }
         if(this.#bird.positionX>=this.#boardWidth-this.#bird.width-30){
             this.#bird.flightDirection = birdDirections.left;
+            this.#leftWallSpikes.drawSlots(4)
+            this.#leftWallSpikes.showSpikes();
+            this.#rightWallSpikes.hideSpikes();
         }
         
     }
@@ -68,5 +81,11 @@ export default class Game {
     }
     get birdHeight(){
         return this.#bird.height;
+    }
+    get leftWallSpikes(){
+        return this.#leftWallSpikes.spikesSlotsArray;
+    }
+    get rightWallSpikes(){
+        return this.#rightWallSpikes.spikesSlotsArray;
     }
 }

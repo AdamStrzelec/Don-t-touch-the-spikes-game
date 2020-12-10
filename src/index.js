@@ -1,5 +1,5 @@
 import './main.css';
-import Game from './game/game';
+import Game from './class/game/game';
 import { birdDirections } from './birdDirectins';
 
 const canvas = document.querySelector("#canvas");

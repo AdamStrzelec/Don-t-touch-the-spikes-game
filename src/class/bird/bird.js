@@ -1,4 +1,4 @@
-import { birdDirections } from '../birdDirectins';
+import { birdDirections } from '../../birdDirectins';
 
 export default class Bird{
     #flightDirection;

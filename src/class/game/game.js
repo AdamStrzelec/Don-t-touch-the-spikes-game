@@ -1,6 +1,6 @@
 import Bird from '../bird/bird';
 import Spikes from '../spikes/spikes';
-import { birdDirections } from '../birdDirectins';
+import { birdDirections } from '../../birdDirectins';
 
 export default class Game {
     #bird;

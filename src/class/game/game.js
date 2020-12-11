@@ -30,43 +30,68 @@ export default class Game {
     }
 
     renderGame(){
-        this.#bird.moveBird();
+        if(!this.#isGameOver){
+            this.#bird.moveBird();
+        }
         this.#leftWallSpikes.moveSpikes();
         this.#rightWallSpikes.moveSpikes();
-        if(this.#bird.positionX<=30){
-            this.#bird.flightDirection = birdDirections.right; 
-            this.#rightWallSpikes.drawSlots(4);
-            this.#rightWallSpikes.showSpikes();
-            this.#leftWallSpikes.hideSpikes();
+
+        if(this.birdTouchedLeftWall()){
+            if(this.#leftWallSpikes.detectCollision(this.#bird.positionY, this.#bird.height)){
+                this.#isGameOver = true;
+            }else{
+                this.#bird.flightDirection = birdDirections.right; 
+                this.#rightWallSpikes.drawSlots(4);
+                this.#rightWallSpikes.showSpikes();
+                this.#leftWallSpikes.hideSpikes();
+            }
         }
-        if(this.#bird.positionX>=this.#boardWidth-this.#bird.width-30){
-            this.#bird.flightDirection = birdDirections.left;
-            this.#leftWallSpikes.drawSlots(4)
-            this.#leftWallSpikes.showSpikes();
-            this.#rightWallSpikes.hideSpikes();
+        if(this.birdTouchedRightWall()){
+            if(this.#rightWallSpikes.detectCollision(this.#bird.positionY, this.#bird.height)){
+                this.#isGameOver = true;
+            }else{
+                this.#bird.flightDirection = birdDirections.left;
+                this.#leftWallSpikes.drawSlots(4)
+                this.#leftWallSpikes.showSpikes();
+                this.#rightWallSpikes.hideSpikes();
+            }
+
+        }
+        if(this.birdTouchedTopWall()){
+            this.#isGameOver = true;
+        }
+        if(this.birdTouchedBottomWall()){
+            this.#isGameOver = true;
         }
         
     }
     jumpBird(){
         this.#bird.jumpBird();
     }
-
+    birdTouchedLeftWall(){
+        return this.#bird.positionX<=30;
+    }
+    birdTouchedRightWall(){
+        return this.#bird.positionX>=this.#boardWidth-this.#bird.width-30;
+    }
+    birdTouchedTopWall(){
+        return this.#bird.positionY<=55;
+    }
+    birdTouchedBottomWall(){
+        return this.#bird.positionY>=this.#boardHeight-55-this.#bird.height;
+    }
     set isGameInProgress(isGameInProgress){
         this.#isGameInProgress = isGameInProgress;
     }
-
     get isGameInProgress(){
         return this.#isGameInProgress
     }
-
     set isGameOver(isGameOver){
         this.#isGameOver = isGameOver;
     }
-
     get isGameOver(){
         return this.#isGameOver;
     }
-
     get birdPositionX(){
         return this.#bird.positionX;
     }

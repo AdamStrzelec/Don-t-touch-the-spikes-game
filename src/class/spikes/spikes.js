@@ -78,6 +78,17 @@ export default class Spikes{
             }
         }
     }
+    detectCollision(birdPositionY, birdHeight){
+        for(let i=0; i<this.#spikesSlotsCount; i++){
+            if(birdPositionY < this.#spikesSlotsArray[i].posY - 12 + this.#spikesSlotsArray[i].height &&
+                birdPositionY + birdHeight > this.#spikesSlotsArray[i].posY + 12){
+                if(!this.#spikesSlotsArray[i].slotIsEmpty){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
     get spikesSlotsArray(){
         return this.#spikesSlotsArray;

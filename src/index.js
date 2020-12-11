@@ -42,6 +42,7 @@ class AnimationFrame {
 }
 
 const game = new Game(canvas.width, canvas.height);
+// console.log(game.rightWallSpikes)
 
 canvas.addEventListener("click", () => {
     game.handleTouchEvent();

@@ -9,6 +9,8 @@ const birdRight = new Image();
 birdRight.src = "../src/images/bird_right.PNG";
 const birdLeft = new Image();
 birdLeft.src = "../src/images/bird_left.PNG";
+const candy = new Image();
+candy.src = "../src/images/candy.PNG";
 
 
 class AnimationFrame {
@@ -42,7 +44,6 @@ class AnimationFrame {
 }
 
 const game = new Game(canvas.width, canvas.height);
-// console.log(game.rightWallSpikes)
 
 canvas.addEventListener("click", () => {
     game.handleTouchEvent();
@@ -114,6 +115,11 @@ function draw(){
         ctx.lineTo(47+i*50, canvas.height-30);
         ctx.closePath();
         ctx.fill();
+    }
+
+    //candy
+    if(game.candy){
+        ctx.drawImage(candy, game.candyParams.positionX, game.candyParams.positionY, game.candyParams.width, game.candyParams.height);
     }
 
 }

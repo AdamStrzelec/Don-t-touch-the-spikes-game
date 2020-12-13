@@ -1,11 +1,13 @@
 import Bird from '../bird/bird';
 import Spikes from '../spikes/spikes';
+import Candy from '../candy/candy';
 import { birdDirections } from '../../birdDirectins';
 
 export default class Game {
     #bird;
     #leftWallSpikes;
     #rightWallSpikes;
+    #candy;
     #isGameInProgress;
     #isGameOver;
     #boardWidth;
@@ -15,6 +17,7 @@ export default class Game {
         this.#bird = new Bird(boardWidth/2-20, boardHeight/2-30);
         this.#leftWallSpikes = new Spikes('left', boardWidth, boardHeight, 'right', 11);
         this.#rightWallSpikes = new Spikes('right', boardWidth, boardHeight, 'right', 11);
+        this.#candy = null;
         this.#isGameInProgress = true;
         this.#isGameOver = false;
         this.#boardWidth = boardWidth;
@@ -33,6 +36,11 @@ export default class Game {
         if(!this.#isGameOver){
             this.#bird.moveBird();
         }
+        if(this.#candy){
+            if(this.#candy.detectCollision(this.#bird.width, this.#bird.height, this.#bird.positionX, this.#bird.positionY)){
+                this.#candy = null;
+            }
+        }
         this.#leftWallSpikes.moveSpikes();
         this.#rightWallSpikes.moveSpikes();
 
@@ -41,9 +49,10 @@ export default class Game {
                 this.#isGameOver = true;
             }else{
                 this.#bird.flightDirection = birdDirections.right; 
-                this.#rightWallSpikes.drawSlots(4);
+                this.#rightWallSpikes.drawSlots(5);
                 this.#rightWallSpikes.showSpikes();
                 this.#leftWallSpikes.hideSpikes();
+                if(!this.#candy)this.#candy = new Candy(this.#bird.flightDirection, this.#boardWidth, this.#boardHeight);
             }
         }
         if(this.birdTouchedRightWall()){
@@ -51,11 +60,11 @@ export default class Game {
                 this.#isGameOver = true;
             }else{
                 this.#bird.flightDirection = birdDirections.left;
-                this.#leftWallSpikes.drawSlots(4)
+                this.#leftWallSpikes.drawSlots(5)
                 this.#leftWallSpikes.showSpikes();
                 this.#rightWallSpikes.hideSpikes();
+                if(!this.#candy)this.#candy = new Candy(this.#bird.flightDirection, this.#boardWidth, this.#boardHeight);
             }
-
         }
         if(this.birdTouchedTopWall()){
             this.#isGameOver = true;
@@ -112,5 +121,11 @@ export default class Game {
     }
     get rightWallSpikes(){
         return this.#rightWallSpikes.spikesSlotsArray;
+    }
+    get candy(){
+        return this.#candy;
+    }
+    get candyParams(){
+        return this.#candy.params;
     }
 }

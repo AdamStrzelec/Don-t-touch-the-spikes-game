@@ -10,20 +10,20 @@ export default class Bird{
     #positionXSpeed;
     #jumpSpeed;
 
-    constructor(positionX, positionY){
+    constructor(positionX, positionY, speed){
         this.#flightDirection = birdDirections.right;
         this.#positionX = positionX;
         this.#positionY = positionY;
         this.#fallingSpeed = 0;
-        this.#jumpSpeed = -10;
-        this.#positionXSpeed = 5;
+        this.#jumpSpeed = -8;
+        this.#positionXSpeed = speed;
         this.#width = 40;
         this.#height = 30;
     }
 
     moveBird(){
         if(this.#fallingSpeed<15){
-            this.#fallingSpeed+=0.4;
+            this.#fallingSpeed+=0.3;
         }else{
             this.#fallingSpeed+=0;
         }
@@ -40,7 +40,9 @@ export default class Bird{
     jumpBird(){
         this.#fallingSpeed = this.#jumpSpeed;
     }
-
+    set speed(speed){
+        this.#positionXSpeed = speed;
+    }
     set positionX(posX){
         this.#positionX = posX;
     }

@@ -6,4 +6,5 @@ canvas{
     background-color: rgb(177, 177, 177);
     margin-left: auto;
     margin-right: auto;
+    transition: background-color 400ms linear; 
 }

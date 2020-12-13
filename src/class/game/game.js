@@ -1,6 +1,7 @@
 import Bird from '../bird/bird';
 import Spikes from '../spikes/spikes';
 import Candy from '../candy/candy';
+import LevelsManager from '../levelsManager/levelsManager';
 import { birdDirections } from '../../birdDirectins';
 
 export default class Game {
@@ -8,13 +9,17 @@ export default class Game {
     #leftWallSpikes;
     #rightWallSpikes;
     #candy;
+    #levelsManager;
     #isGameInProgress;
     #isGameOver;
+    #points;
     #boardWidth;
     #boardHeight;
 
     constructor(boardWidth, boardHeight){
-        this.#bird = new Bird(boardWidth/2-20, boardHeight/2-30);
+        this.#points = 0;
+        this.#levelsManager = new LevelsManager(this.#points);
+        this.#bird = new Bird(boardWidth/2-20, boardHeight/2-30, this.#levelsManager.birdSpeed);
         this.#leftWallSpikes = new Spikes('left', boardWidth, boardHeight, 'right', 11);
         this.#rightWallSpikes = new Spikes('right', boardWidth, boardHeight, 'right', 11);
         this.#candy = null;
@@ -49,9 +54,12 @@ export default class Game {
                 this.#isGameOver = true;
             }else{
                 this.#bird.flightDirection = birdDirections.right; 
-                this.#rightWallSpikes.drawSlots(5);
+                this.#rightWallSpikes.drawSlots(this.#levelsManager.spikesCount);
                 this.#rightWallSpikes.showSpikes();
                 this.#leftWallSpikes.hideSpikes();
+                this.#points++;
+                this.#levelsManager.points = this.#points;
+                this.#bird.speed = this.#levelsManager.birdSpeed;
                 if(!this.#candy)this.#candy = new Candy(this.#bird.flightDirection, this.#boardWidth, this.#boardHeight);
             }
         }
@@ -60,9 +68,12 @@ export default class Game {
                 this.#isGameOver = true;
             }else{
                 this.#bird.flightDirection = birdDirections.left;
-                this.#leftWallSpikes.drawSlots(5)
+                this.#leftWallSpikes.drawSlots(this.#levelsManager.spikesCount)
                 this.#leftWallSpikes.showSpikes();
                 this.#rightWallSpikes.hideSpikes();
+                this.#points++;
+                this.#levelsManager.points = this.#points;
+                this.#bird.speed = this.#levelsManager.birdSpeed;
                 if(!this.#candy)this.#candy = new Candy(this.#bird.flightDirection, this.#boardWidth, this.#boardHeight);
             }
         }
@@ -127,5 +138,11 @@ export default class Game {
     }
     get candyParams(){
         return this.#candy.params;
+    }
+    get points(){
+        return this.#points;
+    }
+    get backgroundColor(){
+        return this.#levelsManager.backgroundColor;
     }
 }

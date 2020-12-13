@@ -20,11 +20,22 @@ export default class Candy{
             birdPositionX + birdWidth > this.#positionX &&
             birdPositionY < this.#positionY + this.#height &&
             birdPositionY + birdHeight > this.#positionY){
+                this.saveCandiesInMemory();
                 return true;
         }else{
             return false;
         }
         
+    }
+
+    saveCandiesInMemory(){
+        let candiesCount = localStorage.getItem('candy');
+        if(candiesCount){
+            candiesCount++;
+            localStorage.setItem('candy', candiesCount);
+        }else{
+            localStorage.setItem('candy', 1);
+        }
     }
 
     get params(){

@@ -45,14 +45,31 @@ class AnimationFrame {
 
 const game = new Game(canvas.width, canvas.height);
 
+ctx.font = "bold 65px Arial";
+ctx.textAlign = "center";
+
 canvas.addEventListener("click", () => {
+    game.handleTouchEvent();
+})
+canvas.addEventListener("touch", ()=>{
     game.handleTouchEvent();
 })
 
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    canvas.style.backgroundColor = game.backgroundColor;
+    ctx.fillStyle = "#F8F9F9";
+    if(game.points<10){
+        ctx.fillText('0'+game.points, canvas.width/2, canvas.height/2 - 20);
+    }else{
+        ctx.fillText(game.points, canvas.width/2, canvas.height/2 - 20);
+    }
+    
+    
     game.renderGame();
 
+    ctx.fillStyle = "#1C2833";
     //draw walls
     ctx.fillRect(0, 0, 30, canvas.height)
     ctx.fillRect(canvas.width-30, 0, 30, canvas.height)

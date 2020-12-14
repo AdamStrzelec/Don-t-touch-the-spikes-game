@@ -4,7 +4,25 @@ body{
 canvas{
     display: block;
     background-color: rgb(177, 177, 177);
-    margin-left: auto;
-    margin-right: auto;
     transition: background-color 400ms linear; 
+    width: 100%;
+    max-width: 500px;
+}
+#game-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#replay_button{
+    width: 150px;
+    height: 70px;
+    position: absolute;
+    left: calc(50% - 75px);
+    display: none;
+    border: none;
+    font-size: 25px;
+    outline: none;
+    cursor: pointer;
+    background-color: darkcyan;
+    color: white;
 }

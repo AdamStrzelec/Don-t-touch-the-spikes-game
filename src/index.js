@@ -3,6 +3,11 @@ import Game from './class/game/game';
 import { birdDirections } from './birdDirectins';
 
 const canvas = document.querySelector("#canvas");
+const replayButton = document.querySelector("#replay_button");
+
+
+const canvasRect = canvas.getBoundingClientRect();
+replayButton.style.top = canvasRect.top+ (canvas.height/2)-50+"px";
 const ctx = canvas.getContext("2d");
 
 const birdRight = new Image();
@@ -43,7 +48,7 @@ class AnimationFrame {
 
 }
 
-const game = new Game(canvas.width, canvas.height);
+let game = new Game(canvas.width, canvas.height);
 
 ctx.font = "bold 65px Arial";
 ctx.textAlign = "center";
@@ -54,12 +59,17 @@ canvas.addEventListener("click", () => {
 canvas.addEventListener("touch", ()=>{
     game.handleTouchEvent();
 })
+replayButton.addEventListener("click", ()=>{
+    game = new Game(canvas.width, canvas.height);
+    replayButton.style.display = 'none';
+})
 
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     canvas.style.backgroundColor = game.backgroundColor;
     ctx.fillStyle = "#F8F9F9";
+    ctx.font = "bold 65px Arial";
     if(game.points<10){
         ctx.fillText('0'+game.points, canvas.width/2, canvas.height/2 - 20);
     }else{
@@ -70,6 +80,27 @@ function draw(){
     game.renderGame();
 
     ctx.fillStyle = "#1C2833";
+
+    if(game.isGameOver && game.isGameInProgress){
+        ctx.font = "bold 60px Arial";
+        ctx.fillText('GAME OVER', canvas.width/2, 120);
+        replayButton.style.display = 'block';
+    }
+    if(!game.isGameOver && !game.isGameInProgress){
+        ctx.font = "bold 40px Arial";
+        ctx.fillText('Click to play', canvas.width/2, 150);
+    }
+
+    if(game.isGameOver || !game.isGameInProgress){
+        ctx.drawImage(candy, canvas.width/2-40, canvas.height-120, 35, 20);
+        ctx.font = "bold 30px Arial";
+        if(localStorage.getItem("candy")){
+            ctx.fillText(localStorage.getItem("candy"), canvas.width/2+40, canvas.height-100);
+        }else{
+            ctx.fillText("0", canvas.width/2, canvas.height-100);
+        }
+    }
+
     //draw walls
     ctx.fillRect(0, 0, 30, canvas.height)
     ctx.fillRect(canvas.width-30, 0, 30, canvas.height)
@@ -135,7 +166,7 @@ function draw(){
     }
 
     //candy
-    if(game.candy){
+    if(game.candy && !game.isGameOver){
         ctx.drawImage(candy, game.candyParams.positionX, game.candyParams.positionY, game.candyParams.width, game.candyParams.height);
     }
 

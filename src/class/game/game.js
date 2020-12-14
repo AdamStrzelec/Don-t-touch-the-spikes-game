@@ -23,7 +23,7 @@ export default class Game {
         this.#leftWallSpikes = new Spikes('left', boardWidth, boardHeight, 'right', 11);
         this.#rightWallSpikes = new Spikes('right', boardWidth, boardHeight, 'right', 11);
         this.#candy = null;
-        this.#isGameInProgress = true;
+        this.#isGameInProgress = false;
         this.#isGameOver = false;
         this.#boardWidth = boardWidth;
         this.#boardHeight = boardHeight;
@@ -31,16 +31,22 @@ export default class Game {
 
     handleTouchEvent(){
         if(this.#isGameInProgress){
-            this.jumpBird()
+            this.jumpBird();
         }else{
-            //to do
+            this.#isGameInProgress = true;
+            this.jumpBird();
         }
     }
 
     renderGame(){
-        if(!this.#isGameOver){
-            this.#bird.moveBird();
+        if(this.#isGameInProgress){
+            if(!this.#isGameOver){
+                this.#bird.moveBird();
+            }
         }
+        // if(!this.#isGameOver){
+        //     this.#bird.moveBird();
+        // }
         if(this.#candy){
             if(this.#candy.detectCollision(this.#bird.width, this.#bird.height, this.#bird.positionX, this.#bird.positionY)){
                 this.#candy = null;

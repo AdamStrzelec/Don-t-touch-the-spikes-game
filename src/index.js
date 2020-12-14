@@ -10,12 +10,12 @@ const canvasRect = canvas.getBoundingClientRect();
 replayButton.style.top = canvasRect.top+ (canvas.height/2)-50+"px";
 const ctx = canvas.getContext("2d");
 
-const birdRight = new Image();
-birdRight.src = "../src/images/bird_right.PNG";
-const birdLeft = new Image();
-birdLeft.src = "../src/images/bird_left.PNG";
-const candy = new Image();
-candy.src = "../src/images/candy.PNG";
+// const birdRight = new Image();
+// birdRight.src = "../src/images/bird_right.PNG";
+// const birdLeft = new Image();
+// birdLeft.src = "../src/images/bird_left.PNG";
+// const candy = new Image();
+// candy.src = "../src/images/candy.PNG";
 
 
 class AnimationFrame {
@@ -64,9 +64,12 @@ replayButton.addEventListener("click", ()=>{
     replayButton.style.display = 'none';
 })
 
+
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+    // birdRight.onload = function(){
+    //     ctx.drawImage(this, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
+    // }
     canvas.style.backgroundColor = game.backgroundColor;
     ctx.fillStyle = "#F8F9F9";
     ctx.font = "bold 65px Arial";
@@ -92,7 +95,10 @@ function draw(){
     }
 
     if(game.isGameOver || !game.isGameInProgress){
-        ctx.drawImage(candy, canvas.width/2-40, canvas.height-120, 35, 20);
+        ctx.fillStyle = "orange";
+        // ctx.drawImage(candy, canvas.width/2-40, canvas.height-120, 35, 20);
+        ctx.fillRect(canvas.width/2-40, canvas.height-120, 35, 20);
+        ctx.fillStyle = "#1C2833";
         ctx.font = "bold 30px Arial";
         if(localStorage.getItem("candy")){
             ctx.fillText(localStorage.getItem("candy"), canvas.width/2+40, canvas.height-100);
@@ -109,9 +115,15 @@ function draw(){
 
     //draw bird
     if(game.birdDirection===birdDirections.right){
-        ctx.drawImage(birdRight, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
+        // birdRight.onload = function(){
+        //     ctx.drawImage(this, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
+        // }
+        ctx.fillRect(game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
     }else{
-        ctx.drawImage(birdLeft, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
+        // birdRight.onload = function(){
+        //     ctx.drawImage(this, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
+        // }
+        ctx.fillRect(game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
     }
     
 
@@ -167,7 +179,9 @@ function draw(){
 
     //candy
     if(game.candy && !game.isGameOver){
-        ctx.drawImage(candy, game.candyParams.positionX, game.candyParams.positionY, game.candyParams.width, game.candyParams.height);
+        // ctx.drawImage(candy, game.candyParams.positionX, game.candyParams.positionY, game.candyParams.width, game.candyParams.height);
+        ctx.fillStyle = "orange";
+        ctx.fillRect(game.candyParams.positionX, game.candyParams.positionY, game.candyParams.width, game.candyParams.height);
     }
 
 }

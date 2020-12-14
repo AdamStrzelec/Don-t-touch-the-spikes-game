@@ -5,18 +5,9 @@ import { birdDirections } from './birdDirectins';
 const canvas = document.querySelector("#canvas");
 const replayButton = document.querySelector("#replay_button");
 
-
 const canvasRect = canvas.getBoundingClientRect();
 replayButton.style.top = canvasRect.top+ (canvas.height/2)-50+"px";
 const ctx = canvas.getContext("2d");
-
-// const birdRight = new Image();
-// birdRight.src = "../src/images/bird_right.PNG";
-// const birdLeft = new Image();
-// birdLeft.src = "../src/images/bird_left.PNG";
-// const candy = new Image();
-// candy.src = "../src/images/candy.PNG";
-
 
 class AnimationFrame {
     constructor( fps = 60, animate ) {
@@ -56,7 +47,7 @@ ctx.textAlign = "center";
 canvas.addEventListener("click", () => {
     game.handleTouchEvent();
 })
-canvas.addEventListener("touch", ()=>{
+canvas.addEventListener("touchstart", ()=>{
     game.handleTouchEvent();
 })
 replayButton.addEventListener("click", ()=>{
@@ -64,12 +55,30 @@ replayButton.addEventListener("click", ()=>{
     replayButton.style.display = 'none';
 })
 
+function displayCandy(x, y, width, height, ctx){
+    ctx.lineWidth = 1;
+    ctx.fillStyle = "orange";
+    ctx.arc(x+width/2, y+height/2, height/2, height/2, 0, 360);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x+width/2, y+height/2);
+    ctx.lineTo(x, y);
+    ctx.lineTo(x, y+height);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(x+width/2, y+height/2);
+    ctx.lineTo(x+width, y);
+    ctx.lineTo(x+width, y+height);
+    ctx.closePath();
+    ctx.fill();
+    ctx.fillStyle = "#F8F9F9";
+}
+
 
 function draw(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    // birdRight.onload = function(){
-    //     ctx.drawImage(this, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
-    // }
+
     canvas.style.backgroundColor = game.backgroundColor;
     ctx.fillStyle = "#F8F9F9";
     ctx.font = "bold 65px Arial";
@@ -95,9 +104,7 @@ function draw(){
     }
 
     if(game.isGameOver || !game.isGameInProgress){
-        ctx.fillStyle = "orange";
-        // ctx.drawImage(candy, canvas.width/2-40, canvas.height-120, 35, 20);
-        ctx.fillRect(canvas.width/2-40, canvas.height-120, 35, 20);
+        displayCandy(canvas.width/2-40, canvas.height-120, 35, 20, ctx);
         ctx.fillStyle = "#1C2833";
         ctx.font = "bold 30px Arial";
         if(localStorage.getItem("candy")){
@@ -113,22 +120,51 @@ function draw(){
     ctx.fillRect(0, 0, canvas.width, 30);
     ctx.fillRect(0, canvas.height-30, canvas.width, 30);
 
+    //candy
+    if(game.candy && !game.isGameOver){
+        displayCandy(game.candyParams.positionX, game.candyParams.positionY, game.candyParams.width, game.candyParams.height, ctx);
+    }
+
     //draw bird
     if(game.birdDirection===birdDirections.right){
-        // birdRight.onload = function(){
-        //     ctx.drawImage(this, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
-        // }
-        ctx.fillRect(game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
+        ctx.lineWidth = 4;
+        ctx.strokeStyle="#F4D03F";
+        ctx.beginPath();
+        ctx.moveTo(game.birdPositionX+20, game.birdPositionY+2);
+        ctx.lineTo(game.birdPositionX+game.birdWidth, game.birdPositionY+game.birdHeight/2);
+        ctx.lineTo(game.birdPositionX+20, game.birdPositionY+28);
+        ctx.lineTo(game.birdPositionX+20, game.birdPositionY+2);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.fillStyle="#D35400";
+        ctx.arc(game.birdPositionX+ game.birdWidth/2 - 5, game.birdPositionY+game.birdHeight/2, 15, 0, 360);
+        ctx.stroke();
+        ctx.arc(game.birdPositionX+ game.birdWidth/2 - 5, game.birdPositionY+game.birdHeight/2, 15, 0, 360);
+        ctx.fill();
+        
     }else{
-        // birdRight.onload = function(){
-        //     ctx.drawImage(this, game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
-        // }
-        ctx.fillRect(game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
+        ctx.lineWidth = 4;
+        ctx.strokeStyle="#F4D03F";
+        ctx.beginPath();
+        ctx.moveTo(game.birdPositionX+20, game.birdPositionY+2);
+        ctx.lineTo(game.birdPositionX, game.birdPositionY+game.birdHeight/2);
+        ctx.lineTo(game.birdPositionX+20, game.birdPositionY+28);
+        ctx.lineTo(game.birdPositionX+20, game.birdPositionY+2);
+        ctx.closePath();
+        ctx.stroke();
+
+        ctx.fillStyle="#D35400";
+        ctx.arc(game.birdPositionX+ game.birdWidth/2 + 5, game.birdPositionY+game.birdHeight/2, 15, 0, 360);
+        ctx.stroke();
+        ctx.arc(game.birdPositionX+ game.birdWidth/2 + 5, game.birdPositionY+game.birdHeight/2, 15, 0, 360);
+        ctx.fill();
+        // ctx.strokeRect(game.birdPositionX, game.birdPositionY, game.birdWidth, game.birdHeight);
     }
     
 
-
-    ctx.strokeStyle = "white";
+    ctx.fillStyle = "#1C2833";
+    // ctx.strokeStyle = "white";
     //draw left wall spikes
     for(let i=0; i<11; i++){
         if(!game.leftWallSpikes[i].slotIsEmpty){
@@ -167,7 +203,9 @@ function draw(){
     }
 
     //draw bottom spiks
+    ctx.fillStyle = "#1C2833";
     for(let i=0; i<8; i++){
+        ctx.fillStyle = "#1C2833";
         ctx.beginPath();
         ctx.moveTo(47+i*50, canvas.height-30);
         ctx.lineTo(102+i*50, canvas.height-30);
@@ -177,12 +215,26 @@ function draw(){
         ctx.fill();
     }
 
-    //candy
-    if(game.candy && !game.isGameOver){
-        // ctx.drawImage(candy, game.candyParams.positionX, game.candyParams.positionY, game.candyParams.width, game.candyParams.height);
-        ctx.fillStyle = "orange";
-        ctx.fillRect(game.candyParams.positionX, game.candyParams.positionY, game.candyParams.width, game.candyParams.height);
-    }
+    // //candy
+    // if(game.candy && !game.isGameOver){
+    //     ctx.lineWidth = 1;
+    //     ctx.fillStyle = "orange";
+    //     ctx.arc(game.candyParams.positionX+game.candyParams.width/2, game.candyParams.positionY+game.candyParams.height/2, game.candyParams.height/2, game.candyParams.height/2, 0, 360);
+    //     ctx.fill();
+    //     ctx.beginPath();
+    //     ctx.moveTo(game.candyParams.positionX+game.candyParams.width/2, game.candyParams.positionY+game.candyParams.height/2);
+    //     ctx.lineTo(game.candyParams.positionX, game.candyParams.positionY);
+    //     ctx.lineTo(game.candyParams.positionX, game.candyParams.positionY+game.candyParams.height);
+    //     ctx.closePath();
+    //     ctx.fill();
+    //     ctx.beginPath();
+    //     ctx.moveTo(game.candyParams.positionX+game.candyParams.width/2, game.candyParams.positionY+game.candyParams.height/2);
+    //     ctx.lineTo(game.candyParams.positionX+game.candyParams.width, game.candyParams.positionY);
+    //     ctx.lineTo(game.candyParams.positionX+game.candyParams.width, game.candyParams.positionY+game.candyParams.height);
+    //     ctx.closePath();
+    //     ctx.fill();
+    //     ctx.fillStyle = "#F8F9F9";
+    // }
 
 }
 
